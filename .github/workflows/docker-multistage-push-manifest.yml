@@ -27,6 +27,16 @@ on:
         description: 'The ref build matrix as JSON string (list of git refs to build/deploy).'
         required: true
         type: boolean
+      default_branch:
+        description: 'The default branch of this repository to fetch latest tags from.'
+        required: false
+        default: ${{ github.event.repository.default_branch }}
+        type: string
+      tag:
+        description: 'The name for the "latest" Docker tag.'
+        required: false
+        default: 'latest'
+        type: string
 
 
     ###
@@ -57,27 +67,30 @@ jobs:
       # Setup repository
       # ------------------------------------------------------------
       - name: "[SETUP] Checkout repository (current)"
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
         if: ${{ !inputs.has_refs }}
 
       - name: "[SETUP] Checkout repository (ref: ${{ matrix.REFS }})"
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           ref: ${{ matrix.REFS }}
         if: ${{ inputs.has_refs }}
 
       - name: "[SETUP] Setup QEMU environment"
-        uses: docker/setup-qemu-action@v2
+        uses: docker/setup-qemu-action@v3
         with:
           image: tonistiigi/binfmt:latest
           platforms: all
 
       - name: "[SETUP] Determine Docker tag"
         id: tag
-        uses: cytopia/docker-tag-action@v0.4.22
+        uses: devilbox-community/github-actions/.github/actions/docker-tag-action@master
+        with:
+          latest_git_branch: ${{ inputs.default_branch }}
+          latest_docker_tag_name: ${{ inputs.tag }}
 
       - name: "[SETUP] Determine manifest arches"
         id: manifest
@@ -96,7 +109,7 @@ jobs:
       # Login
       # ------------------------------------------------------------
       - name: "Login"
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
@@ -106,7 +119,7 @@ jobs:
       # Create Manifest
       # ------------------------------------------------------------
       - name: "[Create Manifest] (${{ steps.manifest.outputs.arches }})"
-        uses: cytopia/shell-command-retry-action@v0.1.6
+        uses: devilbox-community/github-actions/.github/actions/shell-command-retry-action@master
         with:
           command: |
             make manifest-create VERSION=${{ matrix.VERSION }} STAGE=${{ inputs.stage }} FLAVOUR=${{ matrix.FLAVOUR }} ARCHES=${{ steps.manifest.outputs.arches }} TAG=${{ steps.tag.outputs.docker-tag }}
@@ -116,7 +129,7 @@ jobs:
       # Deploy Manifest
       # ------------------------------------------------------------
       - name: "[Push Manifest] ${{ steps.tag.outputs.docker-tag }}"
-        uses: cytopia/shell-command-retry-action@v0.1.6
+        uses: devilbox-community/github-actions/.github/actions/shell-command-retry-action@master
         with:
           command: |
             make manifest-push VERSION=${{ matrix.VERSION }} STAGE=${{ inputs.stage }} FLAVOUR=${{ matrix.FLAVOUR }} TAG=${{ steps.tag.outputs.docker-tag }}
