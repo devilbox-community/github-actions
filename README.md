@@ -1,6 +1,6 @@
 # GitHub Action Reusable Workflows
 
-[![Tag](https://img.shields.io/github/tag/devilbox/github-actions.svg)](https://github.com/devilbox/github-actions/releases)
+[![Tag](https://img.shields.io/github/tag/devilbox-community/github-actions.svg)](https://github.com/devilbox-community/github-actions/releases)
 [![License](https://img.shields.io/badge/license-MIT-%233DA639.svg)](https://opensource.org/licenses/MIT)
 
 Required GitHub Action Reusable Workflows for Devilbox. See [.github/workflows](.github/workflows).
@@ -39,3 +39,4 @@ Then Dependabot will PR you version updates as soon as this repository gets upda
 **[MIT License](LICENSE)**
 
 Copyright (c) 2022 [cytopia](https://github.com/cytopia)
+Copyright (c) 2024-present [nntoan](https://github.com/nntoan)
