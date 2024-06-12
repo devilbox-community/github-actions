@@ -39,4 +39,5 @@ Then Dependabot will PR you version updates as soon as this repository gets upda
 **[MIT License](LICENSE)**
 
 Copyright (c) 2022 [cytopia](https://github.com/cytopia)
+
 Copyright (c) 2024-present [nntoan](https://github.com/nntoan)
