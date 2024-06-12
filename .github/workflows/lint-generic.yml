@@ -14,30 +14,30 @@ jobs:
     steps:
 
       - name: "[SETUP] Checkout repository"
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: Lint Files
-        uses: cytopia/shell-command-retry-action@v0.1.6
+        uses: devilbox-community/github-actions/.github/actions/shell-command-retry-action@master
         with:
           command: |
             make lint-files
 
       - name: Lint Yaml
-        uses: cytopia/shell-command-retry-action@v0.1.6
+        uses: devilbox-community/github-actions/.github/actions/shell-command-retry-action@master
         with:
           command: |
             make lint-yaml
 
       - name: Lint JSON
-        uses: cytopia/shell-command-retry-action@v0.1.6
+        uses: devilbox-community/github-actions/.github/actions/shell-command-retry-action@master
         with:
           command: |
             make lint-json
 
       - name: Lint Bash
-        uses: cytopia/shell-command-retry-action@v0.1.6
+        uses: devilbox-community/github-actions/.github/actions/shell-command-retry-action@master
         with:
           command: |
             make lint-bash
