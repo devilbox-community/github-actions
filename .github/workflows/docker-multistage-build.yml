@@ -72,7 +72,7 @@ jobs:
   # -----------------------------------------------------------------------------------------------
   build:
     name: ${{ matrix.NAME }}-${{ matrix.VERSION }}-${{ inputs.stage }} (${{ matrix.ARCH }}) ${{ matrix.REFS }}
-    runs-on: ubuntu-latest
+    runs-on: ${{ startsWith(matrix.arch, 'linux/arm') && 'ubuntu-24.04-arm' || 'ubuntu-24.04' }}
     strategy:
       fail-fast: false
       matrix:
